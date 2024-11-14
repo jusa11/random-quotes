@@ -21,6 +21,8 @@ const generateRandomQoutes = () => {
   }
 };
 
+let test 
+
 const addToFavorites = () => {
   if (qoute.isFavorite) {
     qoute.isFavorite = false;

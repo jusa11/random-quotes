@@ -1,29 +1,28 @@
-function checkfavoriteBtn(qoute, btn) {
-  if (qoute.isFavorite) {
-    btn.classList.add('active');
-  } else {
-    btn.classList.remove('active');
-  }
-}
+// Меняет цвет иконки в зависимости от есть цитата в избранном или нет
+const updateFavoriteButton = (qoute, btn) =>
+  btn.classList.toggle('active', qoute.isFavorite);
 
+// Убирает карточку с избранное цитатой
 function hideFavoriteCard(qoute, btn) {
   qoute.isFavorite = false;
-  checkfavoriteBtn(qoute, btn);
-  const favoriteCard = document.querySelectorAll('.favorites-qoute');
-  favoriteCard.forEach((card) => {
-    if (card.textContent.includes(qoute.text)) {
-      card.remove();
-    }
-  });
+  updateFavoriteButton(qoute, btn);
+  const favoritesQoute = document.querySelector(`[qouteId = '${qoute.id}']`);
+  favoritesQoute.remove();
 }
 
+// Показывает карточку с избранной цитатой
 function showFavoriteCard(qoute, btn, text) {
   qoute.isFavorite = true;
-  checkfavoriteBtn(qoute, btn);
+  updateFavoriteButton(qoute, btn);
   const favoritesQoute = document.createElement('div');
   favoritesQoute.classList.add('favorites-qoute');
+  favoritesQoute.setAttribute('qouteId', qoute.id);
   favoritesQoute.textContent = `${qoute.text} (${qoute.author})`;
   text.prepend(favoritesQoute);
 }
 
-export { hideFavoriteCard, showFavoriteCard, checkfavoriteBtn };
+export {
+  hideFavoriteCard,
+  showFavoriteCard,
+  updateFavoriteButton as checkfavoriteBtn,
+};

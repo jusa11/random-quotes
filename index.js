@@ -1,6 +1,6 @@
 'use strict';
 import qoutes from './src/qoutes.js';
-import { hideFavoriteCard, showFavoriteCard } from './src/favoritesHandler.js';
+import { hideFavoriteCard, showFavoriteCard, checkfavoriteBtn } from './src/favoritesHandler.js';
 
 const generateBtn = document.getElementById('generate-btn');
 const qouteAuthor = document.querySelector('.quotes-content-author');
@@ -14,11 +14,7 @@ const generateRandomQoutes = () => {
   const { text, author } = qoute;
   qouteText.textContent = `"${text}"`;
   qouteAuthor.textContent = author;
-  if (qoute.isFavorite) {
-    favoritesBtn.classList.add('active');
-  } else {
-    favoritesBtn.classList.remove('active');
-  }
+  checkfavoriteBtn(qoute, favoritesBtn);
 };
 
 const addToFavorites = () =>

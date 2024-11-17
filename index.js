@@ -3,17 +3,13 @@ import qoutes from './src/qoutes.js';
 import {
   hideFavoriteCard,
   showFavoriteCard,
-  checkfavoriteBtn as updateFavoriteButton,
+  updateFavoriteButton,
 } from './src/favoritesHandler.js';
 import { generateRandomInt } from './src/utilits.js';
 
 const generateBtn = document.getElementById('generate-btn');
-const favoritesText = document.querySelector('.favorites-qoutes-item');
 const favoritesBtn = document.querySelector('.favorites-btn');
 let currentQute;
-
-if (!generateBtn || !favoritesText || !favoritesBtn)
-  throw new Error('Не удалось найти нужные элементы на странице.');
 
 // Показывает цитату
 function showQute() {
@@ -33,10 +29,13 @@ const generateRandomQoutes = () => {
 };
 
 // Добавляет цитату в избранное
-const addToFavorites = () =>
-  currentQute.isFavorite
+const addToFavorites = () => {
+  document.querySelector(`[data-qoute-id = '${currentQute.id}']`)
     ? hideFavoriteCard(currentQute, favoritesBtn)
-    : showFavoriteCard(currentQute, favoritesBtn, favoritesText);
+    : showFavoriteCard(currentQute, favoritesBtn);
+
+		updateFavoriteButton(currentQute, favoritesBtn);
+};
 
 generateBtn.addEventListener('click', generateRandomQoutes);
 favoritesBtn.addEventListener('click', addToFavorites);

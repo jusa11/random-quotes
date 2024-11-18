@@ -4,6 +4,7 @@ import {
   hideFavoriteCard,
   showFavoriteCard,
   updateFavoriteButton,
+  initFavoritesHandler,
 } from './src/favoritesHandler.js';
 import { generateRandomInt } from './src/utilits.js';
 
@@ -33,8 +34,8 @@ const addToFavorites = () => {
   document.querySelector(`[data-qoute-id = '${currentQute.id}']`)
     ? hideFavoriteCard(currentQute, favoritesBtn)
     : showFavoriteCard(currentQute, favoritesBtn);
-
-		updateFavoriteButton(currentQute, favoritesBtn);
+  updateFavoriteButton(currentQute, favoritesBtn);
+  initFavoritesHandler(favoritesBtn);
 };
 
 generateBtn.addEventListener('click', generateRandomQoutes);

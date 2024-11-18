@@ -78,3 +78,13 @@ body {
   border-radius: 10px;
   padding: 20px;
 }
+
+.remove-btn {
+  cursor: pointer;
+  color: #ffa500;
+  font-size: 30px;
+  font-weight: bold;
+}
+.remove-btn:hover {
+  color: darkred;
+}

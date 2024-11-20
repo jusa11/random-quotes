@@ -31,13 +31,19 @@ const generateRandomQoutes = () => {
 
 // Добавляет цитату в избранное
 const addToFavorites = () => {
-  document.querySelector(`[data-qoute-id = '${currentQute.id}']`)
+  document.querySelector(
+    `.favorites-qoute[data-qoute-id = '${currentQute.id}']`
+  )
     ? hideFavoriteCard(currentQute, favoritesBtn)
     : showFavoriteCard(currentQute, favoritesBtn);
-  updateFavoriteButton(currentQute, favoritesBtn);
-  initFavoritesHandler(favoritesBtn);
 };
+
+initFavoritesHandler(favoritesBtn);
 
 generateBtn.addEventListener('click', generateRandomQoutes);
 favoritesBtn.addEventListener('click', addToFavorites);
 generateRandomQoutes();
+
+// сделать в массиве isFavorite: false
+// сделать цвет кнопки при удалении (сейчас применяется для всех циатат)
+// кинуть qoutes в data

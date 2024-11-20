@@ -1,5 +1,5 @@
 'use strict';
-import qoutes from './src/qoutes.js';
+import qoutes from './data/qoutes.js';
 import {
   hideFavoriteCard,
   showFavoriteCard,
@@ -43,7 +43,3 @@ initFavoritesHandler(favoritesBtn);
 generateBtn.addEventListener('click', generateRandomQoutes);
 favoritesBtn.addEventListener('click', addToFavorites);
 generateRandomQoutes();
-
-// сделать в массиве isFavorite: false
-// сделать цвет кнопки при удалении (сейчас применяется для всех циатат)
-// кинуть qoutes в data

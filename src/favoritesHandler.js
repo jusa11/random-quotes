@@ -1,5 +1,5 @@
 // Меняет цвет иконки в зависимости от есть цитата в избранном или нет
-import qoutes from './qoutes.js';
+import qoutes from '/data/qoutes.js';
 let qouteText;
 
 const updateFavoriteButton = (qoute, btn) =>
@@ -8,44 +8,47 @@ const updateFavoriteButton = (qoute, btn) =>
 // Убирает карточку с избранное цитатой
 function hideFavoriteCard(qoute, btn) {
   qoute.isFavorite = false;
-  const favoritesQoute = document.querySelector(
-    `.favorites-qoute[data-qoute-id = '${qoute.id}']`
-  );
-  console.log(favoritesQoute);
-  favoritesQoute.remove();
+  document
+    .querySelector(`.favorites-qoute[data-qoute-id = '${qoute.id}']`)
+    ?.remove();
   updateFavoriteButton(qoute, btn);
+}
+
+function createFavoriteCard(qoute) {
+  const favoritesQoute = document.createElement('div');
+  const favoritesCard = document.querySelector('.favorites-qoutes-item');
+  favoritesQoute.classList.add('favorites-qoute');
+  favoritesQoute.setAttribute('data-qoute-id', qoute.id);
+  favoritesQoute.innerHTML = `${qoute.text} (${qoute.author}) <span class="remove-btn">★</span>`;
+  favoritesCard.prepend(favoritesQoute);
 }
 
 // Показывает карточку с избранной цитатой
 function showFavoriteCard(qoute, btn) {
   qoute.isFavorite = true;
-  const favoritesCard = document.querySelector('.favorites-qoutes-item');
-  const favoritesQoute = document.createElement('div');
   qouteText = document.querySelector('.quotes-content-text');
   qouteText.setAttribute('data-qoute-id', qoute.id);
-  favoritesQoute.classList.add('favorites-qoute');
-  favoritesQoute.setAttribute('data-qoute-id', qoute.id);
-  favoritesQoute.innerHTML = `${qoute.text} (${qoute.author}) <span class="remove-btn">★</span>`;
-  favoritesCard.prepend(favoritesQoute);
+  createFavoriteCard(qoute);
   updateFavoriteButton(qoute, btn);
 }
 
+// Убирает карточку с избранное цитатой при клике на нее
 function initFavoritesHandler(btn) {
   const favoriteItem = document.querySelector('.favorites-qoutes-item');
-  favoriteItem.addEventListener('click', (event) => {
-    if (event.target.classList.contains('remove-btn')) {
-      const quoteElement = event.target.parentElement;
-      const idQoute = quoteElement.getAttribute('data-qoute-id');
-      const qouteInArr = qoutes.find((el) => el.id === +idQoute);
-      let IdQouteText = qouteText.getAttribute('data-qoute-id');
-      if (+IdQouteText === qouteInArr.id) {
-        btn.classList.toggle('active');
-      }
 
-      qouteInArr.isFavorite = false;
-      quoteElement.remove();
-    }
-  });
+  if (!favoriteItem.hasAttribute('data-handler-initialized')) {
+    favoriteItem.addEventListener('click', (event) => {
+      if (event.target.classList.contains('remove-btn')) {
+        const card = event.target.parentElement;
+        const idQoute = card.getAttribute('data-qoute-id');
+        const qouteInArr = qoutes.find((q) => q.id === +idQoute);
+        let IdQouteText = qouteText.getAttribute('data-qoute-id');
+        +IdQouteText === qouteInArr.id ? btn.classList.toggle('active') : false;
+        qouteInArr.isFavorite = false;
+        card.remove();
+      }
+    });
+  }
 }
 
 // удаление из массива (делегирование событий)

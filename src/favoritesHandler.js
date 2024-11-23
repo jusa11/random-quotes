@@ -1,19 +1,15 @@
-// Меняет цвет иконки в зависимости от есть цитата в избранном или нет
+import {
+  localStorageSetItem,
+  localStorageRemoveItem,
+} from './utils/localStorage.js';
 import qoutes from '/data/qoutes.js';
 let qouteText;
 
+// Меняет цвет иконки в зависимости от есть цитата в избранном или нет
 const updateFavoriteButton = (qoute, btn) =>
   btn.classList.toggle('active', qoute.isFavorite);
 
-// Убирает карточку с избранное цитатой
-function hideFavoriteCard(qoute, btn) {
-  qoute.isFavorite = false;
-  document
-    .querySelector(`.favorites-qoute[data-qoute-id = '${qoute.id}']`)
-    ?.remove();
-  updateFavoriteButton(qoute, btn);
-}
-
+// Создает карточку для избранной цитаты
 function createFavoriteCard(qoute) {
   const favoritesQoute = document.createElement('div');
   const favoritesCard = document.querySelector('.favorites-qoutes-item');
@@ -23,12 +19,23 @@ function createFavoriteCard(qoute) {
   favoritesCard.prepend(favoritesQoute);
 }
 
+// Убирает карточку с избранное цитатой
+function hideFavoriteCard(qoute, btn) {
+  qoute.isFavorite = false;
+  document
+    .querySelector(`.favorites-qoute[data-qoute-id = '${qoute.id}']`)
+    ?.remove();
+  localStorageRemoveItem(`favoriteQoute-${qoute.id}`);
+  updateFavoriteButton(qoute, btn);
+}
+
 // Показывает карточку с избранной цитатой
 function showFavoriteCard(qoute, btn) {
   qoute.isFavorite = true;
   qouteText = document.querySelector('.quotes-content-text');
   qouteText.setAttribute('data-qoute-id', qoute.id);
   createFavoriteCard(qoute);
+  localStorageSetItem(`favoriteQoute-${qoute.id}`, qoute);
   updateFavoriteButton(qoute, btn);
 }
 
@@ -45,6 +52,7 @@ function initFavoritesHandler(btn) {
         let IdQouteText = qouteText.getAttribute('data-qoute-id');
         +IdQouteText === qouteInArr.id ? btn.classList.toggle('active') : false;
         qouteInArr.isFavorite = false;
+        localStorageRemoveItem(`favoriteQoute-${qouteInArr.id}`);
         card.remove();
       }
     });

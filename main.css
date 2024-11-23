@@ -26,16 +26,22 @@ body {
   display: flex;
 }
 
-.generate-btn {
+.btn {
   text-align: center;
   display: block;
   padding: 20px;
   font-size: 28px;
-  background-color: blue;
   color: #fff;
   text-decoration: none;
   border-radius: 20px;
   margin-right: 20px;
+}
+.generate-btn {
+  background-color: blue;
+}
+
+.delete-btn {
+  background-color: rgb(255, 55, 0);
 }
 
 .favorites-qoutes-title {

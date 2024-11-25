@@ -5,11 +5,12 @@ import {
   showFavoriteCard,
   updateFavoriteButton,
   initFavoritesHandler,
+  renderFavoritesCardLocalStorage,
 } from './src/favoritesHandler.js';
 import { generateRandomInt } from './src/utils/generateRandomInt.js';
 import {
+  localStorageGetItem,
   clearLocalStorage,
-  saveCurrentQuteInLocalStorage,
 } from './src/utils/localStorage.js';
 
 const generateBtn = document.getElementById('generate-btn');
@@ -18,10 +19,11 @@ const deleteBtn = document.querySelector('.delete-btn');
 let currentQute;
 
 // Показывает цитату
-function showQute() {
+function showQute(qoute) {
   const qouteAuthor = document.querySelector('.quotes-content-author');
   const qouteText = document.querySelector('.quotes-content-text');
-  const { text, author } = currentQute;
+  qouteText.setAttribute('data-qoute-id', qoute.id);
+  const { text, author } = qoute;
   qouteText.textContent = `"${text}"`;
   qouteAuthor.textContent = author;
 }
@@ -29,10 +31,9 @@ function showQute() {
 // Выдает цитату из массива цитат
 const generateRandomQoutes = () => {
   currentQute = generateRandomInt(qoutes);
+  showQute(currentQute);
+  console.log(currentQute);
   updateFavoriteButton(currentQute, favoritesBtn);
-  showQute();
-  saveCurrentQuteInLocalStorage('currentQute', currentQute);
-  console.log(qoutes);
 };
 
 // Добавляет цитату в избранное
@@ -44,6 +45,7 @@ const addToFavorites = () => {
     : showFavoriteCard(currentQute, favoritesBtn);
 };
 
+// Удаляет все цитаты из избранного
 const deleteAllQutes = () => {
   const favarr = Array.from(document.querySelectorAll('.favorites-qoute'));
   if (favarr) {
@@ -54,13 +56,23 @@ const deleteAllQutes = () => {
   }
 };
 
+// Убирает карточку с избранное цитатой при клике на нее
 initFavoritesHandler(favoritesBtn);
 
-/* function initApp () {
-	localStorage.length < 0 ? generateRandomQoutes() :
-} */
+// Определяет текущую цитату
+function defineCurrentQute() {
+  const getCurrentQuteID = localStorageGetItem('currentQuteID');
+  currentQute = qoutes.find((el) => el.id === +getCurrentQuteID);
+  return currentQute ? showQute(currentQute) : generateRandomQoutes();
+}
+
+// Запуск приложения
+function initApp() {
+  defineCurrentQute();
+  renderFavoritesCardLocalStorage(favoritesBtn);
+}
 
 generateBtn.addEventListener('click', generateRandomQoutes);
 favoritesBtn.addEventListener('click', addToFavorites);
 deleteBtn.addEventListener('click', deleteAllQutes);
-generateRandomQoutes();
+window.addEventListener('load', initApp);

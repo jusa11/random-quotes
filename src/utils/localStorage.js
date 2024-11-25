@@ -5,7 +5,9 @@ function localStorageSetItem(key, value) {
     return;
   }
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    // value.isFavorite = true;
+    const qoute = JSON.stringify(value);
+    localStorage.setItem(key, qoute);
   } catch (error) {
     console.error('Error setting item in LocalStorage');
   }
@@ -35,5 +37,4 @@ export {
   localStorageGetItem,
   localStorageRemoveItem,
   clearLocalStorage,
-  saveCurrentQuteInLocalStorage,
 };

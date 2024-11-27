@@ -5,7 +5,6 @@ function localStorageSetItem(key, value) {
     return;
   }
   try {
-    // value.isFavorite = true;
     const qoute = JSON.stringify(value);
     localStorage.setItem(key, qoute);
   } catch (error) {

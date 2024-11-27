@@ -37,7 +37,7 @@ const generateRandomQoutes = () => {
   updateFavoriteButton(currentQute, favoritesBtn);
 };
 
-// Добавляет цитату в избранное
+// Добавляет/убирает цитату в избранное
 const addToFavorites = () => {
   document.querySelector(
     `.favorites-qoute[data-qoute-id = '${currentQute.id}']`

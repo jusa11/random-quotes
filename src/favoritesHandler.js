@@ -43,7 +43,7 @@ function hideFavoriteCard(qoute, btn) {
 function showFavoriteCard(qoute, btn) {
   createFavoriteCard(qoute);
   localStorageSetItem(`favoriteQoute-${qoute.id}`, qoute);
-	updateFavoriteButton(qoute, btn);
+  updateFavoriteButton(qoute, btn);
 }
 
 // Убирает карточку с избранное цитатой при клике на нее
@@ -76,7 +76,9 @@ export {
 
 /* 
 2. Сделать чтобы было по порядку 
-3. Сделать чтобы при генерации цитаты не попадались 2 раза подряд
+3. Попробовать сделать чтобы в localStorage сохранялся массив с избранными цитатами а не просто
+цитаты с уникальным ключом в видео "key-ID"
+4. Сделать для строки favoriteQoute отдельную переменную
 */
 
 // остановился на updateFavoriteButton хочу

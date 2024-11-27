@@ -3,15 +3,16 @@ import qoutes from './data/qoutes.js';
 import {
   hideFavoriteCard,
   showFavoriteCard,
-  updateFavoriteButton,
   initFavoritesHandler,
   renderFavoritesCardLocalStorage,
 } from './src/favoritesHandler.js';
 import { generateRandomInt } from './src/utils/generateRandomInt.js';
 import {
-  localStorageGetItem,
+  localStorageSetItem,
   clearLocalStorage,
+  localStorageGetItem,
 } from './src/utils/localStorage.js';
+import updateFavoriteButton from './src/utils/updateFavoriteButton.js';
 
 const generateBtn = document.getElementById('generate-btn');
 const favoritesBtn = document.querySelector('.favorites-btn');
@@ -32,7 +33,7 @@ function showQute(qoute) {
 const generateRandomQoutes = () => {
   currentQute = generateRandomInt(qoutes);
   showQute(currentQute);
-  console.log(currentQute);
+  localStorageSetItem(`currentQuteID`, currentQute.id);
   updateFavoriteButton(currentQute, favoritesBtn);
 };
 
@@ -53,26 +54,31 @@ const deleteAllQutes = () => {
       card.remove();
       clearLocalStorage();
     });
+
+    const cards = document.querySelectorAll('.favorites-qoutes-qoute');
+    favoritesBtn.classList.toggle('active', cards === 0);
   }
 };
 
-// Убирает карточку с избранное цитатой при клике на нее
-initFavoritesHandler(favoritesBtn);
-
-// Определяет текущую цитату
 function defineCurrentQute() {
   const getCurrentQuteID = localStorageGetItem('currentQuteID');
   currentQute = qoutes.find((el) => el.id === +getCurrentQuteID);
   return currentQute ? showQute(currentQute) : generateRandomQoutes();
 }
 
+// Убирает карточку с избранное цитатой при клике на нее
+initFavoritesHandler(favoritesBtn);
+
 // Запуск приложения
 function initApp() {
   defineCurrentQute();
   renderFavoritesCardLocalStorage(favoritesBtn);
+  updateFavoriteButton(currentQute, favoritesBtn);
 }
 
 generateBtn.addEventListener('click', generateRandomQoutes);
 favoritesBtn.addEventListener('click', addToFavorites);
 deleteBtn.addEventListener('click', deleteAllQutes);
 window.addEventListener('load', initApp);
+
+export { showQute, generateRandomQoutes, currentQute };

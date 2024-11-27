@@ -4,24 +4,7 @@ import {
   localStorageRemoveItem,
 } from './utils/localStorage.js';
 import qoutes from '/data/qoutes.js';
-
-// Меняет цвет иконки в зависимости от есть цитата в избранном или нет
-const updateFavoriteButton = (qoute, btn) => {
-  // btn.classList.toggle('active', qoute.isFavorite);
-  const favoritesKey = Object.keys(localStorage).filter((key) =>
-    key.startsWith('favoriteQoute-')
-  );
-  const nArr = [];
-  favoritesKey.forEach((key) => {
-    const qouteInLs = localStorageGetItem(key);
-    nArr.push(qouteInLs);
-    // btn.classList.toggle('active', qouteInLs.id === qoute.id);
-  });
-  const res = nArr.find((q) => {
-    return q.id === qoute.id;
-  });
-  btn.classList.toggle('active', res);
-};
+import updateFavoriteButton from './utils/updateFavoriteButton.js';
 
 // Создает карточку для избранной цитаты
 function createFavoriteCard(qoute) {
@@ -29,18 +12,20 @@ function createFavoriteCard(qoute) {
   const favoritesCard = document.querySelector('.favorites-qoutes-item');
   favoritesQoute.classList.add('favorites-qoute');
   favoritesQoute.setAttribute('data-qoute-id', qoute.id);
+
+  const qouteText = document.querySelector('.quotes-content-text');
+  qouteText.setAttribute('is-favorit', 'true');
   favoritesQoute.innerHTML = `${qoute.text} (${qoute.author}) <span class="remove-btn">★</span>`;
   favoritesCard.prepend(favoritesQoute);
 }
 
 // Отрисовывает карточки с избранными цитатами из localStorage
-function renderFavoritesCardLocalStorage(btn) {
+function renderFavoritesCardLocalStorage() {
   const favoritesKey = Object.keys(localStorage).filter((key) =>
     key.startsWith('favoriteQoute-')
   );
   favoritesKey.forEach((key) => {
     const qoute = localStorageGetItem(key);
-    console.log(qoute);
     createFavoriteCard(qoute);
   });
 }
@@ -51,13 +36,14 @@ function hideFavoriteCard(qoute, btn) {
     .querySelector(`.favorites-qoute[data-qoute-id = '${qoute.id}']`)
     ?.remove();
   localStorageRemoveItem(`favoriteQoute-${qoute.id}`);
+  updateFavoriteButton(qoute, btn);
 }
 
 // Показывает карточку с избранной цитатой
 function showFavoriteCard(qoute, btn) {
   createFavoriteCard(qoute);
   localStorageSetItem(`favoriteQoute-${qoute.id}`, qoute);
-  updateFavoriteButton(qoute, btn);
+	updateFavoriteButton(qoute, btn);
 }
 
 // Убирает карточку с избранное цитатой при клике на нее
@@ -84,16 +70,13 @@ function initFavoritesHandler(btn) {
 export {
   hideFavoriteCard,
   showFavoriteCard,
-  updateFavoriteButton,
   initFavoritesHandler,
   renderFavoritesCardLocalStorage,
 };
 
-/* 1. Звездочка при обновлении страницы не краснеет если 
-цитата из localstorage уже есть  
+/* 
 2. Сделать чтобы было по порядку 
 3. Сделать чтобы при генерации цитаты не попадались 2 раза подряд
-4. Куда то пропала id текущей цитаты в localstorage
 */
 
 // остановился на updateFavoriteButton хочу

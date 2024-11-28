@@ -1,10 +1,11 @@
 import {
   localStorageSetItem,
   localStorageGetItem,
-  localStorageRemoveItem,
 } from './utils/localStorage.js';
-import qoutes from '/data/qoutes.js';
 import updateFavoriteButton from './utils/updateFavoriteButton.js';
+
+const FAVORITE_QUTES = 'favoriteQoute';
+let favoritesQutes = JSON.parse(localStorage.getItem(FAVORITE_QUTES)) || [];
 
 // Создает карточку для избранной цитаты
 function createFavoriteCard(qoute) {
@@ -21,47 +22,53 @@ function createFavoriteCard(qoute) {
 
 // Отрисовывает карточки с избранными цитатами из localStorage
 function renderFavoritesCardLocalStorage() {
-  const favoritesKey = Object.keys(localStorage).filter((key) =>
-    key.startsWith('favoriteQoute-')
-  );
-  favoritesKey.forEach((key) => {
-    const qoute = localStorageGetItem(key);
-    createFavoriteCard(qoute);
-  });
+  const qoutes = localStorageGetItem(FAVORITE_QUTES);
+  if (qoutes && qoutes.length > 0) {
+    qoutes.forEach((qoute) => createFavoriteCard(qoute));
+  } else {
+    console.log('У вас нет избранных цитат');
+  }
 }
 
 // Убирает карточку с избранное цитатой
 function hideFavoriteCard(qoute, btn) {
-  document
-    .querySelector(`.favorites-qoute[data-qoute-id = '${qoute.id}']`)
-    ?.remove();
-  localStorageRemoveItem(`favoriteQoute-${qoute.id}`);
+  const deleteQute = localStorageGetItem(FAVORITE_QUTES).filter(
+    (q) => q.id !== qoute.id
+  );
+  localStorageSetItem(FAVORITE_QUTES, deleteQute);
+  favoritesQutes = deleteQute;
+  console.log(favoritesQutes);
+
+  const cardQute = document.querySelector(
+    `.favorites-qoute[data-qoute-id = '${qoute.id}']`
+  );
+  cardQute.remove();
   updateFavoriteButton(qoute, btn);
 }
 
 // Показывает карточку с избранной цитатой
 function showFavoriteCard(qoute, btn) {
   createFavoriteCard(qoute);
-  localStorageSetItem(`favoriteQoute-${qoute.id}`, qoute);
+  localStorageSetItem(FAVORITE_QUTES, favoritesQutes);
   updateFavoriteButton(qoute, btn);
 }
 
 // Убирает карточку с избранное цитатой при клике на нее
 function initFavoritesHandler(btn) {
   const favoriteItem = document.querySelector('.favorites-qoutes-item');
-
   if (!favoriteItem.hasAttribute('data-handler-initialized')) {
     favoriteItem.addEventListener('click', (event) => {
       if (event.target.classList.contains('remove-btn')) {
         const card = event.target.parentElement;
-        const idQoute = card.getAttribute('data-qoute-id');
-        const qouteInArr = qoutes.find((q) => q.id === +idQoute);
-        const qouteText = document.querySelector('.quotes-content-text');
-        let IdQouteText = qouteText.getAttribute('data-qoute-id');
-        +IdQouteText === qouteInArr.id ? btn.classList.toggle('active') : false;
-        qouteInArr.isFavorite = false;
-        localStorageRemoveItem(`favoriteQoute-${qouteInArr.id}`);
         card.remove();
+
+        const quteId = card.getAttribute('data-qoute-id');
+        const qoute = favoritesQutes.find((q) => q.id === +quteId);
+        const deleteQute = localStorageGetItem(FAVORITE_QUTES).filter(
+          (q) => q.id !== qoute.id
+        );
+        localStorageSetItem(FAVORITE_QUTES, deleteQute);
+        favoritesQutes = deleteQute;
       }
     });
   }
@@ -74,11 +81,8 @@ export {
   renderFavoritesCardLocalStorage,
 };
 
-/* 
-2. Сделать чтобы было по порядку 
-3. Попробовать сделать чтобы в localStorage сохранялся массив с избранными цитатами а не просто
-цитаты с уникальным ключом в видео "key-ID"
-4. Сделать для строки favoriteQoute отдельную переменную
-*/
+export default favoritesQutes;
 
-// остановился на updateFavoriteButton хочу
+/* 
+1. Сделать снова кнопку избранного
+*/

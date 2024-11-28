@@ -6,6 +6,7 @@ import {
   initFavoritesHandler,
   renderFavoritesCardLocalStorage,
 } from './src/favoritesHandler.js';
+import favoritesQutes from './src/favoritesHandler.js';
 import { generateRandomInt } from './src/utils/generateRandomInt.js';
 import {
   localStorageSetItem,
@@ -39,11 +40,16 @@ const generateRandomQoutes = () => {
 
 // Добавляет/убирает цитату в избранное
 const addToFavorites = () => {
-  document.querySelector(
-    `.favorites-qoute[data-qoute-id = '${currentQute.id}']`
-  )
-    ? hideFavoriteCard(currentQute, favoritesBtn)
-    : showFavoriteCard(currentQute, favoritesBtn);
+  if (
+    document.querySelector(
+      `.favorites-qoute[data-qoute-id = '${currentQute.id}']`
+    )
+  ) {
+    hideFavoriteCard(currentQute, favoritesBtn);
+  } else {
+    favoritesQutes.push(currentQute);
+    showFavoriteCard(currentQute, favoritesBtn);
+  }
 };
 
 // Удаляет все цитаты из избранного
@@ -52,6 +58,7 @@ const deleteAllQutes = () => {
   if (favarr) {
     favarr.forEach((card) => {
       card.remove();
+      favoritesQutes.length = 0;
       clearLocalStorage();
     });
 
@@ -81,4 +88,4 @@ favoritesBtn.addEventListener('click', addToFavorites);
 deleteBtn.addEventListener('click', deleteAllQutes);
 window.addEventListener('load', initApp);
 
-export { showQute, generateRandomQoutes, currentQute };
+export { showQute, generateRandomQoutes };

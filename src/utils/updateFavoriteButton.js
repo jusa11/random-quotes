@@ -1,10 +1,10 @@
 // Меняет цвет иконки в зависимости от есть цитата в избранном или нет
-const updateFavoriteButton = (qoute, btn) => {
-  const favoritesKey = Object.keys(localStorage);
+import favoritesQutes from '../favoritesHandler.js';
 
-  favoritesKey.find((key) => {
-    let res = key === `favoriteQoute-${qoute.id}`;
-    return btn.classList.toggle('active', res);
+const updateFavoriteButton = (qoute, btn) => {
+  favoritesQutes.find((q) => {
+    console.log(favoritesQutes);
+    return btn.classList.toggle('active', q.id === qoute.id);
   });
 };
 
